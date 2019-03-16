@@ -1,0 +1,20 @@
+{
+  "name": "@serverless-plugin-sqs-local/example-config",
+  "version": "1.0.0",
+  "description": "Example overwriting configuration",
+  "main": "handler.js",
+  "author": "kobanyan",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "postinstall": "sls elasticmq install",
+    "start": "cross-env SQS_PORT=9325 sls offline start",
+    "clean": "rimraf .ElasticMQ"
+  },
+  "devDependencies": {
+    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.1",
+    "cross-env": "^5.2.0",
+    "serverless": "^1.39.0",
+    "serverless-offline": "^4.9.1"
+  }
+}

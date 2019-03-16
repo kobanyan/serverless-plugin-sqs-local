@@ -1,0 +1,29 @@
+{
+  "name": "@serverless-plugin-sqs-local/example-webpack",
+  "version": "1.0.0",
+  "description": "Example with webpack",
+  "main": "handler.js",
+  "author": "kobanyan",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "postinstall": "sls elasticmq install",
+    "start": "sls offline start",
+    "clean": "rimraf .elasticmq .webpack"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.422.0",
+    "source-map-support": "^0.5.10"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.17",
+    "@types/node": "^10.12.18",
+    "serverless": "^1.39.0",
+    "serverless-offline": "^4.9.1",
+    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.1",
+    "serverless-webpack": "^5.2.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.4",
+    "webpack": "^4.29.0"
+  }
+}

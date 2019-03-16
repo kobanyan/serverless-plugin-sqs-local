@@ -1,0 +1,52 @@
+{
+  "name": "@serverless-plugin-sqs-local/serverless-plugin-sqs-local",
+  "version": "0.0.1",
+  "description": "Serverless SQS local plugin",
+  "keywords": [
+    "serverless",
+    "sqs",
+    "lambda",
+    "elasticmq"
+  ],
+  "author": "kobanyan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kobanyan/serverless-plugin-sqs-local.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kobanyan/serverless-plugin-sqs-local/issues"
+  },
+  "homepage": "https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/packages/serverless-plugin-sqs-local#readme",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "files": [
+    "lib/",
+    "src/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "run-s clean compile",
+    "clean": "rimraf ./lib",
+    "compile": "rollup -c ../rollup.config.js",
+    "lint": "tslint -p . --fix",
+    "test": "echo 'No tests'"
+  },
+  "dependencies": {
+    "@serverless-plugin-sqs-local/elasticmq-localhost": "^0.0.1",
+    "figures": "^2.0.0",
+    "lodash.mergewith": "^4.6.1"
+  },
+  "devDependencies": {
+    "@types/figures": "^2.0.0",
+    "@types/lodash.mergewith": "^4.6.6",
+    "@types/serverless": "^1.18.1"
+  },
+  "peerDependencies": {
+    "aws-sdk": ">=2",
+    "serverless": ">=1.36.3",
+    "serverless-offline": ">=3.33.0"
+  }
+}

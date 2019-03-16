@@ -1,0 +1,33 @@
+service: serverless-plugin-sqs-local-example-with-webpack
+
+plugins:
+  - serverless-webpack
+  - '@serverless-plugin-sqs-local/serverless-plugin-sqs-local'
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  ping:
+    handler: handler.ping
+    events:
+      - http:
+          path: ping
+          method: get
+  pong:
+    handler: handler.pong
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - SQSQueuePing
+              - Arn
+
+resources:
+  Resources:
+    SQSQueuePing:
+     Type: AWS::SQS::Queue
+     Properties:
+       QueueName: ping

@@ -1,0 +1,20 @@
+{
+  "name": "@serverless-plugin-sqs-local/example-options",
+  "version": "1.0.0",
+  "description": "Example overwriting configuration with options",
+  "main": "handler.js",
+  "author": "kobanyan",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "postinstall": "sls elasticmq install --ElasticMQDownloadUrl https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-0.13.8.jar --ElasticMQPath .elasticMq",
+    "start": "sls offline start --ElasticMQPath .elasticMq --ElasticMQPort 9326",
+    "clean": "rimraf .elasticMQ"
+  },
+  "devDependencies": {
+    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.1",
+    "cross-env": "^5.2.0",
+    "serverless": "^1.39.0",
+    "serverless-offline": "^4.9.1"
+  }
+}

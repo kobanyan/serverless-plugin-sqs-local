@@ -1,0 +1,38 @@
+{
+  "name": "serverless-plugin-sqs-local",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "clean": "lerna clean",
+    "build": "lerna run build --ignore example*",
+    "test": "lerna run test --parallel --ignore example*",
+    "lint": "lerna run lint --parallel --ignore example*",
+    "release": "lerna publish from-package"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/node-fetch": "^2.1.6",
+    "@types/progress": "^2.0.3",
+    "@types/rimraf": "^2.0.2",
+    "@types/wait-on": "^3.2.0",
+    "husky": "^1.3.1",
+    "jest": "^24.5.0",
+    "lerna": "^3.13.1",
+    "lint-staged": "^8.1.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.16.4",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.6.0",
+    "rollup-plugin-dts": "^0.13.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.20.1",
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.14.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.3.3333",
+    "wait-on": "^3.2.0"
+  }
+}

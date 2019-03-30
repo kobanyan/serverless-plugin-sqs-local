@@ -1,6 +1,6 @@
 {
   "name": "@serverless-plugin-sqs-local/serverless-plugin-sqs-local",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Serverless SQS local plugin",
   "keywords": [
     "serverless",
@@ -35,7 +35,7 @@
     "test": "echo 'No tests'"
   },
   "dependencies": {
-    "@serverless-plugin-sqs-local/elasticmq-localhost": "^0.0.1",
+    "@serverless-plugin-sqs-local/elasticmq-localhost": "^0.0.2",
     "figures": "^2.0.0",
     "lodash.mergewith": "^4.6.1",
     "wait-on": "^3.2.0"

@@ -5,7 +5,6 @@ Serverless SQS Plugin - Allows to run SQS locally for serverless
 ## Requires
 
 - [Serverless](https://serverless.com)
-- [Serverless Offline](https://github.com/dherault/serverless-offline)
 - Java Runtime Engine (JRE) version 8 or newer
 
 ## Features
@@ -13,7 +12,7 @@ Serverless SQS Plugin - Allows to run SQS locally for serverless
 - Install [ElasticMQ](https://github.com/softwaremill/elasticmq) as local SQS
 - Start local SQS with the specific port
 - Queue Creation for local SQS
-- Trigger lambda function
+- Trigger lambda function using [Serverless Offline](https://github.com/dherault/serverless-offline)
 - [Serverless Webpack](https://github.com/serverless-heaven/serverless-webpack/) support
 
 ## Install Plugin
@@ -26,7 +25,7 @@ npm install --save-dev @serverless-plugin-sqs-local/serverless-plugin-sqs-local
 yarn add --dev @serverless-plugin-sqs-local/serverless-plugin-sqs-local
 ```
 
-Then inside your project's serverless.yml file, add following entry to the plugins section before serverless-offline (and after serverless-webpack if presents).
+Then inside your project's serverless.yml file, add following entry to the plugins section before serverless-offline and after serverless-webpack if presents.
 
 ```yaml
 plugins:
@@ -39,11 +38,15 @@ plugins:
 
 ## Using the Plugin
 
-1. Install ElasticMQ as local SQS `sls elasticmq install`
+1. Install ElasticMQ as local SQS: `serverless elasticmq install`
 1. Add SQS Resource definitions to your project's serverless.yml file
-1. Start local SQS `sls elasticmq start` or `sls offline start`
+1. Start local SQS: `serverless elasticmq start` or `serveless offline start`
 
-### Install: sls elasticmq install
+### Install
+
+```
+serverless elasticmq install
+```
 
 All CLI options are optional:
 
@@ -59,14 +62,19 @@ All the above options can be added to serverless.yml to set default configuratio
 ```yaml
 custom:
   serverless-plugin-sqs-local:
-    setup:
-      downloadUrl: 'https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-0.13.8.jar'
-      installPath: '.ElasticMQ'
+    elasticmq:
+      setup:
+        downloadUrl: 'https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-0.13.8.jar'
+        installPath: '.ElasticMQ'
 ```
 
 [See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/config/serverless.yml).
 
-### Start: sls elasticmq start
+### Start
+
+```
+serveless elasticmq start
+```
 
 All CLI options are optional:
 
@@ -75,18 +83,24 @@ All CLI options are optional:
 --ElasticMQPort  The port number that ElasticMQ will use to communicate with your application. The default port is 9324
 ```
 
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/options/package.json).
+
 All the above options can be added to serverless.yml to set default configuration: e.g.
 
 ```yaml
 custom:
   serverless-plugin-sqs-local:
-    setup:
-      installPath: '.ElasticMQ'
-    start:
-      port: 9325
+    elasticmq:
+      setup:
+        installPath: '.ElasticMQ'
+      start:
+        port: 9325
 ```
 
 [See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/config/serverless.yml).
+
+When using this plugin with serverless-offline, the local SQS start command can be triggered automatically.
+Please note that you still need to install local SQS first.
 
 ### Configuration function and SQS
 

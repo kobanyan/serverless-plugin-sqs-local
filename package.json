@@ -10,6 +10,7 @@
     "build": "lerna run build --ignore example*",
     "test": "lerna run test --parallel --ignore example*",
     "lint": "lerna run lint --parallel --ignore example*",
+    "version": "lerna version --conventional-commits",
     "release": "lerna publish from-package",
     "prepare": "husky install"
   },

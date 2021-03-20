@@ -28,7 +28,7 @@
     "build": "run-s clean compile",
     "clean": "rimraf ./lib",
     "compile": "rollup -c ../rollup.config.js",
-    "lint": "tslint -p . --fix",
+    "lint": "eslint src/**/*.ts",
     "test": "jest --coverage"
   },
   "dependencies": {

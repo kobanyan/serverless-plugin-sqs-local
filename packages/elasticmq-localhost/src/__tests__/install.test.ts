@@ -51,7 +51,7 @@ describe('install', () => {
         },
       })
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Error configuring or installing ElasticMQ local Error: Error in downloading ElasticMQ FetchError: request to http://unknownhost/unknown.jar failed, reason: getaddrinfo ENOTFOUND unknownhost unknownhost:80"`
+      `"Error configuring or installing ElasticMQ local Error: Error in downloading ElasticMQ FetchError: request to http://unknownhost/unknown.jar failed, reason: getaddrinfo ENOTFOUND unknownhost"`
     );
   });
 });

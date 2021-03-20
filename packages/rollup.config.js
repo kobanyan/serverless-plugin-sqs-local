@@ -8,6 +8,7 @@ export default {
       file: 'lib/index.js',
       format: 'cjs',
       sourcemap: true,
+      exports: 'default',
     },
     {
       file: 'lib/index.mjs',

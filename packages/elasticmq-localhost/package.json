@@ -37,6 +37,8 @@
     "progress": "^2.0.3"
   },
   "devDependencies": {
-    "@types/lodash.mergewith": "^4.6.6"
+    "@types/lodash.mergewith": "^4.6.6",
+    "@types/node-fetch": "^2.1.6",
+    "@types/progress": "^2.0.3"
   }
 }

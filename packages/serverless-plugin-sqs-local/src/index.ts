@@ -28,17 +28,6 @@ interface SQSProperties {
   [key: string]: string;
 }
 
-interface Resources {
-  resources?: {
-    Resources: {
-      [key: string]: {
-        Type: string;
-        Properties: SQSProperties;
-      };
-    };
-  };
-}
-
 const commands = {
   elasticmq: {
     commands: {
@@ -93,7 +82,7 @@ type Callback = (err?: any, data?: any) => void;
 
 export default class ServerlessElasticMQ {
   private options: PluginOptions;
-  private service: Service & Resources;
+  private service: Service;
   public commands: Commands;
   public hooks: Hooks;
   private port?: number;
@@ -169,8 +158,8 @@ export default class ServerlessElasticMQ {
     ) {
       const resources = this.service.resources.Resources;
       const promises = Object.keys(resources)
-        .filter(key => resources[key].Type === 'AWS::SQS::Queue')
-        .map(key => this.createInitialQueue(key, resources[key].Properties));
+        .filter((key) => resources[key].Type === 'AWS::SQS::Queue')
+        .map((key) => this.createInitialQueue(key, resources[key].Properties));
       await Promise.all(promises);
     }
   };
@@ -183,15 +172,13 @@ export default class ServerlessElasticMQ {
       QueueName: queue.QueueName,
     };
     Object.keys(queue)
-      .filter(key => key !== 'QueueName')
-      .forEach(key => {
+      .filter((key) => key !== 'QueueName')
+      .forEach((key) => {
         const attrs: Sqs.QueueAttributeMap = {};
         attrs[key] = queue[key].toString();
         params.Attributes = attrs;
       });
-    await this.getClient()
-      .createQueue(params)
-      .promise();
+    await this.getClient().createQueue(params).promise();
   };
   private getClient = () => {
     return new Sqs({
@@ -205,7 +192,7 @@ export default class ServerlessElasticMQ {
   private startOfflineKinesis = async () => {
     const promises = this.service
       .getAllFunctions()
-      .filter(functionName => {
+      .filter((functionName) => {
         try {
           this.service.getEventInFunction('sqs', functionName);
         } catch {
@@ -214,7 +201,7 @@ export default class ServerlessElasticMQ {
         }
         return true;
       })
-      .map(functionName => {
+      .map((functionName) => {
         const sqsEvent = this.service.getEventInFunction(
           'sqs',
           functionName

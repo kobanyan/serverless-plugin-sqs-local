@@ -1,6 +1,6 @@
 {
   "name": "@serverless-plugin-sqs-local/example",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Example",
   "main": "handler.js",
   "author": "kobanyan",
@@ -15,7 +15,7 @@
     "aws-sdk": "^2.422.0"
   },
   "devDependencies": {
-    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.2",
+    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.3",
     "serverless": "^1.39.0",
     "serverless-offline": "^4.9.1"
   }

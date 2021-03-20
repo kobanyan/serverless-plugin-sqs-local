@@ -1,6 +1,6 @@
 {
   "name": "@serverless-plugin-sqs-local/example-webpack",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Example with webpack",
   "main": "handler.js",
   "author": "kobanyan",
@@ -16,7 +16,7 @@
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {
-    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.2",
+    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.3",
     "@types/aws-lambda": "^8.10.17",
     "@types/node": "^10.12.18",
     "serverless": "^1.39.0",

@@ -1,6 +1,6 @@
 {
   "name": "@serverless-plugin-sqs-local/example-options",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Example overwriting configuration with options",
   "main": "handler.js",
   "author": "kobanyan",
@@ -12,7 +12,7 @@
     "clean": "rimraf .elasticMQ"
   },
   "devDependencies": {
-    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.2",
+    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.3",
     "cross-env": "^5.2.0",
     "serverless": "^1.39.0",
     "serverless-offline": "^4.9.1"

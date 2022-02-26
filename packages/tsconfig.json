@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2019",
     "strict": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "declaration": true
   }
 }

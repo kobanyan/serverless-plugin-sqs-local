@@ -1,15 +1,9 @@
 import Sqs from 'aws-sdk/clients/sqs';
-import figures from 'figures';
 import mergeWith from 'lodash.mergewith';
-import * as path from 'path';
 import * as Serverless from 'serverless';
 import * as Service from 'serverless/classes/Service';
 import waitOn from 'wait-on';
-const {
-  createHandler,
-  getFunctionOptions,
-} = require('serverless-offline/src/functionHelper');
-const createLambdaContext = require('serverless-offline/src/createLambdaContext');
+const Lambda = require('serverless-offline/dist/lambda').default;
 
 import elasticmq from '@serverless-plugin-sqs-local/elasticmq-localhost';
 import { Options as ElasticMQOptions } from '@serverless-plugin-sqs-local/elasticmq-localhost/lib/Config';
@@ -20,8 +14,21 @@ type PluginOptions = Serverless.Options & {
   ElasticMQDownloadUrl?: string;
   ElasticMQPath?: string;
   ElasticMQPort?: number;
-  providedRuntime?: string;
+  location?: string;
 };
+
+interface PluginConfig {
+  elasticmq?: {
+    setup?: {
+      downloadUrl?: string;
+      installPath?: string;
+    };
+    start?: {
+      port?: string;
+    };
+  };
+  location?: string;
+}
 
 interface SQSProperties {
   QueueName: string;
@@ -36,10 +43,12 @@ const commands = {
         lifecycleEvents: ['installHandler'],
         options: {
           ElasticMQDownloadUrl: {
+            type: 'string',
             usage:
               'Url to download ElasticMQ jar file. The default url is latest',
           },
           ElasticMQPath: {
+            type: 'string',
             usage:
               'Directory path to install ElasticMQ. The default directory is "$PWD/.elasticmq"',
           },
@@ -50,10 +59,12 @@ const commands = {
         usage: 'Starts local SQS',
         options: {
           ElasticMQPath: {
+            type: 'string',
             usage:
               'ElasticMQ installed directory path. The default directory is "$PWD/.elasticmq"',
           },
           ElasticMQPort: {
+            type: 'string',
             usage:
               'The port number that ElasticMQ will use to communicate with your application. The default port is 9324',
           },
@@ -68,24 +79,14 @@ interface Hooks {
   [event: string]: () => Promise<any>;
 }
 
-const fromCallback = (fun: any) =>
-  new Promise((resolve, reject) => {
-    fun((err: any, data: any) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(data);
-    });
-  });
-
-type Callback = (err?: any, data?: any) => void;
-
 export default class ServerlessElasticMQ {
   private options: PluginOptions;
   private service: Service;
   public commands: Commands;
   public hooks: Hooks;
   private port?: number;
+  private sqsClient?: Sqs;
+  private lambda: typeof Lambda;
   constructor(private serverless: Serverless, options: PluginOptions) {
     this.options = options;
     this.service = serverless.service;
@@ -115,9 +116,10 @@ export default class ServerlessElasticMQ {
     );
   };
   private getConfig(name: string) {
-    return (
-      (this.service && this.service.custom && this.service.custom[name]) || {}
-    );
+    return ((this.service &&
+      this.service.custom &&
+      this.service.custom[name]) ||
+      {}) as PluginConfig;
   }
   public startHandler = async () => {
     this.serverless.cli.log(`Starting Offline SQS...`);
@@ -151,6 +153,13 @@ export default class ServerlessElasticMQ {
     });
   };
   private createOfflineSQSQueues = async () => {
+    this.sqsClient = new Sqs({
+      endpoint: this.endpoint,
+      region:
+        this.options.region || this.service.provider.region || 'us-east-1',
+      accessKeyId: 'root',
+      secretAccessKey: 'root',
+    });
     if (
       this.service &&
       this.service.resources &&
@@ -178,76 +187,68 @@ export default class ServerlessElasticMQ {
         attrs[key] = queue[key].toString();
         params.Attributes = attrs;
       });
-    await this.getClient().createQueue(params).promise();
-  };
-  private getClient = () => {
-    return new Sqs({
-      endpoint: this.endpoint,
-      region:
-        this.options.region || this.service.provider.region || 'us-east-1',
-      accessKeyId: 'root',
-      secretAccessKey: 'root',
-    });
+    await this.sqsClient!.createQueue(params).promise();
   };
   private startOfflineKinesis = async () => {
-    const promises = this.service
+    const sqsEventHandlers = this.service
       .getAllFunctions()
-      .filter((functionName) => {
-        try {
-          this.service.getEventInFunction('sqs', functionName);
-        } catch {
-          // throw error when not exist
-          return false;
-        }
-        return true;
-      })
-      .map((functionName) => {
-        const sqsEvent = this.service.getEventInFunction(
-          'sqs',
-          functionName
-        ) as { [key: string]: any };
-        return this.createQueueReadable(functionName, sqsEvent['sqs']);
-      });
+      .reduce<{ functionKey: string; events: Record<string, any> }[]>(
+        (eventHandlers, functionKey) => {
+          try {
+            const events = this.service.getEventInFunction('sqs', functionKey);
+            eventHandlers.push({
+              functionKey,
+              events,
+            });
+          } catch {
+            // throw error when not exist
+          }
+          return eventHandlers;
+        },
+        []
+      );
+    const lambdas = sqsEventHandlers.map(({ functionKey }) => {
+      const functionDefinition = this.service.getFunction(functionKey);
+      return {
+        functionKey,
+        functionDefinition,
+      };
+    });
+    this.lambda = new Lambda(this.serverless, {
+      location: this.getConfig(PLUGIN_NAME).location,
+    });
+    this.lambda.create(lambdas);
+    const promises = sqsEventHandlers.map(({ functionKey, events }) => {
+      return this.createQueueReadable(functionKey, events['sqs']);
+    });
     return promises;
   };
   private createQueueReadable = async (
-    functionName: string,
+    functionKey: string,
     queueEvent: any
   ) => {
-    const client = this.getClient();
     const queueName = this.getQueueName(queueEvent);
-    this.serverless.cli.log(`${queueName}`);
-    const resUrl = await client
-      .getQueueUrl({
-        QueueName: queueName,
-      })
-      .promise();
-    const QueueUrl = resUrl.QueueUrl;
+    const { QueueUrl } = await this.sqsClient!.getQueueUrl({
+      QueueName: queueName,
+    }).promise();
     if (!QueueUrl) {
       return;
     }
     const next = async () => {
-      const resMessage = await client
-        .receiveMessage({
-          QueueUrl,
-          MaxNumberOfMessages: queueEvent.batchSize,
-          WaitTimeSeconds: 1,
-        })
-        .promise();
-      const Messages = resMessage.Messages;
+      const { Messages } = await this.sqsClient!.receiveMessage({
+        QueueUrl,
+        MaxNumberOfMessages: queueEvent.batchSize,
+        WaitTimeSeconds: 1,
+      }).promise();
       if (Messages) {
-        await fromCallback((cb: Callback) =>
-          this.eventHandler(queueEvent, functionName, Messages, cb)
-        );
-        await client
-          .deleteMessageBatch({
-            Entries: Messages.map(({ MessageId: Id, ReceiptHandle }) => ({
-              Id: Id!,
-              ReceiptHandle: ReceiptHandle!,
-            })),
-            QueueUrl,
-          })
-          .promise();
+        await this.handleEvent(queueEvent, functionKey, Messages);
+        await this.sqsClient!.deleteMessageBatch({
+          Entries: Messages.map(({ MessageId: Id, ReceiptHandle }) => ({
+            Id: Id!,
+            ReceiptHandle: ReceiptHandle!,
+          })),
+          QueueUrl,
+        }).promise();
       }
       await next();
     };
@@ -284,60 +285,14 @@ export default class ServerlessElasticMQ {
     const [, , , , , QueueName] = arn.split(':');
     return QueueName;
   };
-  private eventHandler = (
+  private handleEvent = async (
     queueEvent: any,
     functionName: string,
-    messages: Sqs.Message[],
-    cb: Callback
+    messages: Sqs.Message[]
   ) => {
     const streamName = this.getQueueName(queueEvent);
     this.serverless.cli.log(`${streamName} (λ: ${functionName})`);
-    const { location = '.' } = this.getConfig('serverless-offline');
-    const func = this.service.getFunction(functionName);
-    const servicePath = path.join(this.serverless.config.servicePath, location);
-    let serviceRuntime = this.service.provider.runtime;
-    if (!serviceRuntime) {
-      throw new Error('Missing required property "runtime" for provider.');
-    }
-    if (typeof serviceRuntime !== 'string') {
-      throw new Error(
-        'Provider configuration property "runtime" wasn\'t a string.'
-      );
-    }
-    if (serviceRuntime === 'provided') {
-      if (this.options.providedRuntime) {
-        serviceRuntime = this.options.providedRuntime;
-      } else {
-        throw new Error(
-          'Runtime "provided" is unsupported. Please add a --providedRuntime CLI option.'
-        );
-      }
-    }
-    if (
-      !(
-        serviceRuntime.startsWith('nodejs') ||
-        serviceRuntime.startsWith('python') ||
-        serviceRuntime.startsWith('ruby')
-      )
-    ) {
-      this.serverless.cli.log(
-        `Warning: found unsupported runtime '${serviceRuntime}'`
-      );
-      return;
-    }
-    const funOptions = getFunctionOptions(
-      func,
-      functionName,
-      servicePath,
-      serviceRuntime
-    );
-    const handler = createHandler(funOptions, {});
-    const lambdaContext = createLambdaContext(func, (err: any, data: any) => {
-      this.serverless.cli.log(
-        `[${err ? figures.cross : figures.tick}] ${JSON.stringify(data) || ''}`
-      );
-      cb(err, data);
-    });
+    const lambdaFunction = this.lambda.get(functionName);
     const event = {
       Records: messages.map(
         ({
@@ -360,13 +315,8 @@ export default class ServerlessElasticMQ {
         })
       ),
     };
-    if (handler.length < 3) {
-      handler(event, lambdaContext)
-        .then((res: any) => lambdaContext.done(null, res))
-        .catch(lambdaContext.done);
-    } else {
-      handler(event, lambdaContext, lambdaContext.done);
-    }
+    lambdaFunction.setEvent(event);
+    await lambdaFunction.runHandler();
   };
   public stopHandler = async () => {
     this.serverless.cli.log('Stopping Offline SQS...');
@@ -378,16 +328,3 @@ export default class ServerlessElasticMQ {
     return `http://localhost:${this.port}`;
   }
 }
-
-// type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
-// type ConfigurableSetupConfig = Partial<Omit<SetupConfig, 'jar'>>;
-
-// type ConfigurableStartConfig = Partial<StartConfig>;
-
-// interface ConfigurableConfig {
-//   setup?: ConfigurableSetupConfig;
-//   start?: ConfigurableStartConfig;
-// }
-
-// export default ConfigurableConfig;

@@ -1,6 +1,6 @@
 {
   "name": "@serverless-plugin-sqs-local/elasticmq-localhost",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "ElasticMQ runner for development and testing",
   "keywords": [
     "elasticmq"
@@ -15,6 +15,9 @@
     "url": "https://github.com/kobanyan/serverless-plugin-sqs-local/issues"
   },
   "homepage": "https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/packages/elasticmq-localhost#readme",
+  "engines": {
+    "node": ">=14"
+  },
   "main": "lib/index.js",
   "module": "lib/index.mjs",
   "files": [

@@ -12,9 +12,8 @@
     "clean": "rimraf .ElasticMQ"
   },
   "devDependencies": {
-    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.3",
-    "cross-env": "^5.2.0",
-    "serverless": "^1.39.0",
-    "serverless-offline": "^4.9.1"
+    "cross-env": "^7.0.3",
+    "serverless": "^2.72.2",
+    "serverless-offline": "^8.4.0"
   }
 }

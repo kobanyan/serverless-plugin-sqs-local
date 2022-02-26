@@ -15,8 +15,7 @@
     "aws-sdk": "^2.422.0"
   },
   "devDependencies": {
-    "@serverless-plugin-sqs-local/serverless-plugin-sqs-local": "^0.0.3",
-    "serverless": "^1.39.0",
-    "serverless-offline": "^4.9.1"
+    "serverless": "^2.72.2",
+    "serverless-offline": "^8.4.0"
   }
 }

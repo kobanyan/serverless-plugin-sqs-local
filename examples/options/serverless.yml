@@ -1,12 +1,15 @@
 service: serverless-plugin-sqs-local-example-config
 
 plugins:
-  - '@serverless-plugin-sqs-local/serverless-plugin-sqs-local'
-  - serverless-offline
+  localPath: '../../packages/serverless-plugin-sqs-local'
+  modules:
+    - '@serverless-plugin-sqs-local/serverless-plugin-sqs-local'
+    - serverless-offline
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs14.x
+  lambdaHashingVersion: '20201221'
 
 functions:
   ping:

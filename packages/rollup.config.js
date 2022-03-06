@@ -19,7 +19,6 @@ export default {
   plugins: [
     typescript({
       typescript: require('typescript'),
-      objectHashIgnoreUnknownHack: true,
     }),
     sourceMaps(),
   ],

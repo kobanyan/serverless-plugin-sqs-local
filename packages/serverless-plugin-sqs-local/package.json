@@ -40,12 +40,12 @@
   "dependencies": {
     "@serverless-plugin-sqs-local/elasticmq-localhost": "^1.0.0",
     "lodash.mergewith": "^4.6.2",
-    "wait-on": "^5.3.0"
+    "wait-on": "^6.0.1"
   },
   "devDependencies": {
     "@types/lodash.mergewith": "^4.6.6",
     "@types/serverless": "^1.78.44",
-    "@types/wait-on": "^5.2.0"
+    "@types/wait-on": "^5.3.1"
   },
   "peerDependencies": {
     "aws-sdk": ">=2",

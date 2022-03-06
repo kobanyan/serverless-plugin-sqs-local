@@ -35,7 +35,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "lodash.mergewith": "^4.6.1",
+    "lodash.mergewith": "^4.6.2",
     "node-fetch": "^2.3.0",
     "progress": "^2.0.3"
   },

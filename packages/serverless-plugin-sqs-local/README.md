@@ -34,7 +34,7 @@ plugins:
   - serverless-offline
 ```
 
-[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/webpack).
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/main/examples/webpack).
 
 ## Using the Plugin
 
@@ -55,7 +55,7 @@ All CLI options are optional:
 --ElasticMQPath         Directory path to install ElasticMQ. The default directory is "$PWD/.elasticmq"
 ```
 
-[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/options/package.json).
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/main/examples/options/package.json).
 
 All the above options can be added to serverless.yml to set default configuration: e.g.
 
@@ -68,7 +68,7 @@ custom:
         installPath: '.ElasticMQ'
 ```
 
-[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/config/serverless.yml).
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/main/examples/config/serverless.yml).
 
 ### Start
 
@@ -83,7 +83,7 @@ All CLI options are optional:
 --ElasticMQPort  The port number that ElasticMQ will use to communicate with your application. The default port is 9324
 ```
 
-[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/options/package.json).
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/main/examples/options/package.json).
 
 All the above options can be added to serverless.yml to set default configuration: e.g.
 
@@ -97,7 +97,7 @@ custom:
         port: 9325
 ```
 
-[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/config/serverless.yml).
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/main/examples/config/serverless.yml).
 
 When using this plugin with serverless-offline, the local SQS start command can be triggered automatically.
 Please note that you still need to install local SQS first.
@@ -106,7 +106,7 @@ Please note that you still need to install local SQS first.
 
 The configuration of function and SQS of the plugin follows the [serverless documentation](https://serverless.com/framework/docs/providers/aws/events/sqs/).
 
-[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/examples/example/serverless.yml).
+[See example](https://github.com/kobanyan/serverless-plugin-sqs-local/tree/main/examples/example/serverless.yml).
 
 ## Credits
 

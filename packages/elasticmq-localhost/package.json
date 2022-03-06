@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/kobanyan/serverless-plugin-sqs-local/issues"
   },
-  "homepage": "https://github.com/kobanyan/serverless-plugin-sqs-local/tree/master/packages/elasticmq-localhost#readme",
+  "homepage": "https://github.com/kobanyan/serverless-plugin-sqs-local#readme",
   "engines": {
     "node": ">=14"
   },

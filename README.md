@@ -1,5 +1,14 @@
 # serverless-plugin-sqs-local
 
+[![serverless](http://public.serverless.com/badges/v3.svg)](https://www.serverless.com)
+[![npm](https://img.shields.io/npm/v/@serverless-plugin-sqs-local/serverless-plugin-sqs-local.svg?style=flat-square)](https://www.npmjs.com/package/@serverless-plugin-sqs-local/serverless-plugin-sqs-local)
+![node](https://img.shields.io/node/v/@serverless-plugin-sqs-local/serverless-plugin-sqs-local.svg?style=flat-square)
+![serverless](https://img.shields.io/npm/dependency-version/@serverless-plugin-sqs-local/serverless-plugin-sqs-local/peer/serverless.svg?style=flat-square)
+![serverless-offline](https://img.shields.io/npm/dependency-version/@serverless-plugin-sqs-local/serverless-plugin-sqs-local/peer/serverless-offline.svg?style=flat-square)
+[![code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+![license](https://img.shields.io/npm/l/@serverless-plugin-sqs-local/serverless-plugin-sqs-local.svg?style=flat-square)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 Serverless SQS Plugin - Allows to run SQS locally for serverless
 
 ## Requires
